@@ -11,7 +11,7 @@ RUN apt update && apt install build-essential git libnuma-dev autoconf curl \
     flake8 python3-sphinx graphviz groff -y
 
 RUN cd /usr/src/ && \
-    git clone -b branch-2.15 --depth=1 https://github.com/openvswitch/ovs.git && \
+    git clone -b branch-2.14 --depth=1 https://github.com/openvswitch/ovs.git && \
     cd ovs && \
     curl https://github.com/kubeovn/ovs/commit/df1c802f568be2af84aa81372fec46f5b09b4366.patch | git apply && \
     curl https://github.com/kubeovn/ovs/commit/8dd4973bba021ce92eb9f42446d6c1c0e3474e25.patch | git apply && \
@@ -21,10 +21,12 @@ RUN cd /usr/src/ && \
 
 RUN dpkg -i /usr/src/python3-openvswitch*.deb /usr/src/libopenvswitch*.deb
 
-RUN cd /usr/src/ && git clone -b branch-21.03 --depth=1 https://github.com/ovn-org/ovn.git && \
+RUN cd /usr/src/ && git clone -b branch-20.06 --depth=1 https://github.com/ovn-org/ovn.git && \
     cd ovn && \
-    curl https://github.com/kubeovn/ovn/commit/289c62e3fcd05901dac4b727aa59f6cba058905f.patch | git apply && \
-    curl https://github.com/kubeovn/ovn/commit/e24734913d25c0bffdf1cfd79e14ef43d01e1019.patch | git apply && \
+    curl https://github.com/kubeovn/ovn/commit/d8253981485e499979cc47c9453b6be8eebe5f0e.patch | git apply --exclude debian/changelog && \
+    curl https://github.com/kubeovn/ovn/commit/f2db72af17f8ad1ea721b1d02e005ed84620fde2.patch | git apply && \
+    curl https://github.com/kubeovn/ovn/commit/afb8d70fd2488631fdd71af26c6fedf78ef9309a.patch | git apply && \
+    curl https://github.com/kubeovn/ovn/commit/402049e21ce5fb2d0ea23c04843f49a4ab65f027.patch | git apply && \
     sed -i 's/OVN/ovn/g' debian/changelog && \
     rm -rf .git && \
     ./boot.sh && \
@@ -52,7 +54,7 @@ RUN mkdir -p /var/run/openvswitch && \
 
 ARG ARCH
 ENV CNI_VERSION=v0.8.7
-RUN curl -sSf -L --retry 5 https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-${ARCH}-${CNI_VERSION}.tgz | tar -xz -C . ./loopback ./portmap
+RUN curl -sSf -L --retry 5 https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-${ARCH}-${CNI_VERSION}.tgz | tar -xz -C . ./loopback ./portmap ./macvlan
 
 ENV KUBE_VERSION="v1.21.1"
 
