@@ -1,0 +1,81 @@
+name: Build x86 Image
+on: workflow_dispatch
+
+env:
+  KIND_VERSION: v0.11.1
+  REGISTRY: etcdnecx
+  RELEASE_TAG: ecx-v1.8.5
+
+jobs:
+  build:
+    name: Build x86
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.5
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Check out kube-ovn
+        run: |
+          git clone -b $RELEASE_TAG --depth=1 https://github.com/EdgeCloudX/kube-ovn.git
+          cp dist/images/Dockerfile kube-ovn/dist/images/Dockerfile -f
+          cp dist/images/Makefile kube-ovn/Makefile -f
+
+      - name: Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Unit test
+        run: |
+          cd kube-ovn
+          go install github.com/onsi/ginkgo/ginkgo@latest
+          make ut
+
+      - name: Build
+        run: |
+          cd kube-ovn
+          go mod tidy
+          go install github.com/securego/gosec/cmd/gosec@latest
+          make release
+          make tar
+
+      - name: Upload kube-ovn image to artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: kube-ovn
+          path: kube-ovn/kube-ovn.tar
+
+  push:
+    needs:
+      - build
+    name: push
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Download kube-ovn image
+        uses: actions/download-artifact@v2
+        with:
+          name: kube-ovn
+
+      - name: Load Image
+        run: |
+          docker load --input kube-ovn.tar
+
+      - name: Push
+        if: ${{ contains(github.ref, 'release') }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          cat VERSION
+          TAG=$(cat VERSION)
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker images
+          docker push $REGISTRY/kube-ovn:$TAG
