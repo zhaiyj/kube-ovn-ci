@@ -63,7 +63,6 @@ push-release: release
 .PHONY: tar
 tar:
 	docker save $(REGISTRY)/kube-ovn:$(RELEASE_TAG) -o kube-ovn.tar
-	docker save $(REGISTRY)/vpc-nat-gateway:$(RELEASE_TAG) -o vpc-nat-gateway.tar
 
 .PHONY: base-tar-amd64
 base-tar-amd64:
@@ -338,6 +337,6 @@ clean:
 	$(RM) dist/images/kube-ovn dist/images/kube-ovn-cmd
 	$(RM) yamls/kind.yaml
 	$(RM) ovn.yaml kube-ovn.yaml kube-ovn-crd.yaml
-	$(RM) kube-ovn.tar vpc-nat-gateway.tar image-amd64.tar image-arm64.tar
+	$(RM) kube-ovn.tar image-amd64.tar image-arm64.tar
 	$(RM) test/e2e/ovnnb_db.* test/e2e/ovnsb_db.*
 	$(RM) install-underlay.sh
