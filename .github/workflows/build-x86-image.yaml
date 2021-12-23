@@ -20,14 +20,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check out kube-ovn
-        uses: actions/checkout@v2
-        with:
-          repository: EdgeCloudX/kube-ovn
-          ref: $(cat VERSION)
-          path: kube-ovn
-
-      - name: Go to kube-ovn code directory
         run: |
+          git clone -b $(cat VERSION) --depth=1 https://github.com/EdgecLOUDx/kube-ovn.git
+          cp dist/images/Dockerfile kube-ovn/dist/images/Dockerfile -f
           cd kube-ovn
 
       - name: Docker Buildx
