@@ -46,11 +46,13 @@ jobs:
 
       - name: Unit test
         run: |
+          cd kube-ovn
           go install github.com/onsi/ginkgo/ginkgo@latest
           make ut
 
       - name: Build
         run: |
+          cd kube-ovn
           go mod tidy
           go install github.com/securego/gosec/cmd/gosec@latest
           make release
