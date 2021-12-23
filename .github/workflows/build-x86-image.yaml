@@ -4,6 +4,7 @@ on: workflow_dispatch
 env:
   KIND_VERSION: v0.11.1
   REGISTRY: etcdnecx
+  RELEASE_TAG: ecx-v1.8.4
 
 jobs:
   build:
@@ -21,9 +22,9 @@ jobs:
 
       - name: Check out kube-ovn
         run: |
-          git clone -b $(cat VERSION) --depth=1 https://github.com/EdgecLOUDx/kube-ovn.git
+          git clone -b $RELEASE_TAG --depth=1 https://github.com/EdgeCloudX/kube-ovn.git
           cp dist/images/Dockerfile kube-ovn/dist/images/Dockerfile -f
-          cd kube-ovn
+          cp dist/images/Makefile kube-ovn/Makefile -f
 
       - name: Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -62,10 +63,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: kube-ovn
-          path: kube-ovn.tar
+          path: kube-ovn/kube-ovn.tar
 
   push:
     name: push
+    needs: build
     runs-on: ubuntu-18.04
     steps:
       - name: Check out code
@@ -81,7 +83,7 @@ jobs:
           docker load --input kube-ovn.tar
 
       - name: Push
-        if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'release') }}
+        if: ${{ contains(github.ref, 'release') }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
