@@ -84,4 +84,4 @@ jobs:
           TAG=$(cat VERSION)
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker images
-          docker push $(REGISTRY)/kube-ovn:$TAG
+          docker push $REGISTRY/kube-ovn:$TAG
