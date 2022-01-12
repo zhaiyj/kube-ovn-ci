@@ -1,4 +1,4 @@
-name: Build Base
+name: Build Base dpdk
 on: workflow_dispatch
 
 jobs:
