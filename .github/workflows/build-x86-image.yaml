@@ -1,6 +1,9 @@
 name: Build x86 Image
-on: workflow_dispatch
-
+on:
+  push:
+    branches:
+      - master
+      - release-*
 env:
   KIND_VERSION: v0.11.1
   REGISTRY: etcdnecx
