@@ -14,7 +14,7 @@ RUN cd /usr/src/ && \
     git clone -b v2.14.5 --depth=1 https://github.com/openvswitch/ovs.git && \
     cd ovs && \
     # increase election timer
-    curl -s https://github.com/kubeovn/ovs/commit/22ea22c40b46ee5adeae977ff6cfca81b3ff25d7.patch | git apply && \
+    curl -s https://github.com/EdgeCloudX/ovs/commit/7f04043ee5815985b60d4822345802967a9643ce.patch | git apply && \
     ./boot.sh && \
     rm -rf .git && \
     CONFIGURE_OPTS='LIBS=-ljemalloc' && \
