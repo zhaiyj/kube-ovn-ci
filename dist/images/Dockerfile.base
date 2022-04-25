@@ -26,11 +26,9 @@ RUN dpkg -i /usr/src/python3-openvswitch*.deb /usr/src/libopenvswitch*.deb
 RUN cd /usr/src/ && git clone -b v20.06.3 --depth=1 https://github.com/ovn-org/ovn.git && \
     cd ovn && \
     # feat: modify src-route priority
-    curl -s https://github.com/kubeovn/ovn/commit/e24734913d25c0bffdf1cfd79e14ef43d01e1019.patch | git apply && \
-    # do not send traffic that not designate to svc to conntrack
-    curl -s https://github.com/kubeovn/ovn/commit/d26ae4de0ab070f6b602688ba808c8963f69d5c4.patch | git apply && \
+    curl -s https://github.com/EdgeCloudX/ovn/commit/fcf0be53ba7ad3a75c143b99f851ec396809b3fd.patch | git apply && \
     # change hash type from dp_hash to hash with field src_ip
-    curl -s https://github.com/kubeovn/ovn/commit/ab923b252271cbbcccc8091e338ee7efe75e5fcd.patch | git apply && \
+    curl -s https://github.com/EdgeCloudX/ovn/commit/0a0ca4b66fe7050406837e3be1c94f0252ed3468.patch | git apply && \
     sed -i 's/OVN/ovn/g' debian/changelog && \
     rm -rf .git && \
     ./boot.sh && \
