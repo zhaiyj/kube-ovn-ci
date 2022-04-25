@@ -11,24 +11,30 @@ RUN apt update && apt install build-essential git libnuma-dev autoconf curl \
     flake8 python3-sphinx graphviz groff wget libjemalloc-dev -y
 
 RUN cd /usr/src/ && \
-    git clone -b ecx-2.14.5 --depth=1 https://github.com/EdgeCloudX/ovs.git && \
+    git clone -b v2.17.0 --depth=1 https://github.com/openvswitch/ovs.git && \
     cd ovs && \
+    # increase election timer
+    curl -s https://github.com/kubeovn/ovs/commit/22ea22c40b46ee5adeae977ff6cfca81b3ff25d7.patch | git apply && \
     ./boot.sh && \
     rm -rf .git && \
     CONFIGURE_OPTS='LIBS=-ljemalloc' && \
     if [ "$ARCH" = "amd64" ]; then CONFIGURE_OPTS='LIBS=-ljemalloc CFLAGS="-O2 -g -msse4.2 -mpopcnt"'; fi && \
-    DATAPATH_CONFIGURE_OPTS='--prefix=/usr --enable-shared' EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
+    DATAPATH_CONFIGURE_OPTS='--prefix=/usr' EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
 RUN dpkg -i /usr/src/python3-openvswitch*.deb /usr/src/libopenvswitch*.deb
 
-RUN cd /usr/src/ && git clone -b ecx-20.06.3 --depth=1 https://github.com/EdgeCloudX/ovn.git && \
+RUN cd /usr/src/ && git clone -b branch-22.03 --depth=1 https://github.com/ovn-org/ovn.git && \
     cd ovn && \
+    # do not send traffic that not designate to svc to conntrack
+    curl -s https://github.com/kubeovn/ovn/commit/d26ae4de0ab070f6b602688ba808c8963f69d5c4.patch | git apply && \
+    # change hash type from dp_hash to hash with field src_ip
+    curl -s https://github.com/kubeovn/ovn/commit/ab923b252271cbbcccc8091e338ee7efe75e5fcd.patch | git apply && \
     sed -i 's/OVN/ovn/g' debian/changelog && \
     rm -rf .git && \
     ./boot.sh && \
     CONFIGURE_OPTS='LIBS=-ljemalloc' && \
     if [ "$ARCH" = "amd64" ]; then CONFIGURE_OPTS='LIBS=-ljemalloc CFLAGS="-O2 -g -msse4.2 -mpopcnt"'; fi && \
-    OVSDIR=/usr/src/ovs DATAPATH_CONFIGURE_OPTS='--prefix=/usr --with-ovs-source=/usr/src/ovs' EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
+    OVSDIR=/usr/src/ovs EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
 RUN mkdir /packages/ && \
     cp /usr/src/libopenvswitch*.deb /packages && \
@@ -43,7 +49,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt upgrade -y && apt install ca-certificates python3 hostname libunwind8 netbase \
     ethtool iproute2 ncat libunbound-dev procps libatomic1 kmod iptables \
     tcpdump ipset curl uuid-runtime openssl inetutils-ping arping ndisc6 \
-    logrotate libjemalloc2 dnsutils -y --no-install-recommends && \
+    logrotate libjemalloc2 dnsutils net-tools nmap -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/* && \
     cd /usr/sbin && \
     ln -sf /usr/sbin/iptables-legacy iptables && \
