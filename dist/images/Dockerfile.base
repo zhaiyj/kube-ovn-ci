@@ -33,15 +33,14 @@ RUN cd /usr/src/ && git clone -b ecx-20.06.3 --depth=1 https://github.com/EdgeCl
     sed -i '54d' debian/rules  && \
     sed -i '65,90d' debian/rules  && \
     truncate  -s 0 debian/*.manpages && \
-    #rm -rf debian/control.modules.in && \
-    #sed -i '23,119d' debian/control && \
-    #sed -i '197,343d' debian/control && \
     sed -i 's/--dbg-package=openvswitch-dbg//g' debian/rules && \
     CONFIGURE_OPTS='LIBS=-ljemalloc' && \
     if [ "$ARCH" = "amd64" ]; then CONFIGURE_OPTS='LIBS=-ljemalloc CFLAGS="-O2 -g -msse4.2 -mpopcnt"'; fi && \
     OVSDIR=/usr/src/ovs DATAPATH_CONFIGURE_OPTS='--prefix=/usr --with-ovs-source=/usr/src/ovs' EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
 RUN mkdir /packages/ && \
+     cp /usr/src/ovn/ovn-ic-*.ovsschema /packages && \
+     cp /usr/src/ovn/utilities/ovn-lib /packages && \
      cp /usr/src/libopenvswitch*.deb /packages && \
      cp /usr/src/openvswitch-*.deb /packages && \
      cp /usr/src/python3-openvswitch*.deb /packages && \
@@ -74,4 +73,6 @@ RUN --mount=type=bind,target=/packages,from=ovs-builder,source=/packages  \
     dpkg -i /packages/libopenvswitch*.deb && \
     dpkg -i /packages/openvswitch-*.deb && \
     dpkg -i /packages/python3-openvswitch*.deb &&\
-    dpkg -i --ignore-depends=openvswitch-switch,openvswitch-common /packages/ovn-*.deb
+    dpkg -i --ignore-depends=openvswitch-switch,openvswitch-common /packages/ovn-*.deb && \
+    cp /packages/ovn-ic-*.ovsschema /usr/share/ovn/ &&\
+    cp /packages/ovn-lib /usr/share/ovn/scripts/
