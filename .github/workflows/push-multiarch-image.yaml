@@ -1,9 +1,15 @@
 name: Push Multi Arch Image
-on: workflow_dispatch
-
+on:
+  workflow_run:
+    workflows: ["Build arm64 Image", "Build x86 Image"]
+    branches:
+      - ecx-develop
+      - release-*
+    types:
+      - completed
 env:
   REGISTRY: etcdnecx
-  RELEASE_TAG: ecx-v1.9.0
+  RELEASE_TAG: ecx-v1.9.1
 
 jobs:
   build:
@@ -14,7 +20,7 @@ jobs:
       - uses: docker/setup-buildx-action@v2
 
       - name: Push
-        if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'release') }}
+        if: ${{ github.ref == 'refs/heads/ecx-develop' || contains(github.ref, 'release') }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
