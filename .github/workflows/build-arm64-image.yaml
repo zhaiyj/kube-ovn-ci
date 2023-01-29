@@ -48,7 +48,7 @@ jobs:
           make release-arm || make release-arm
 
       - name: Push
-        if: ${{ contains(github.ref, 'release') }}
+        if: ${{ contains(github.ref, 'release') || contains(github.ref, 'ecx-develop' }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
