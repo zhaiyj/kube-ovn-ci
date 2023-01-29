@@ -4,6 +4,7 @@ on:
     branches:
     - master
     - release-*
+    - ecx-develop
     paths-ignore:
     - 'docs/**'
     - '**.md'
