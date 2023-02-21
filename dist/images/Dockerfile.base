@@ -33,6 +33,8 @@ RUN cd /usr/src/ && git clone -b ecx-20.06.3 --depth=1 https://github.com/EdgeCl
     sed -i '54d' debian/rules  && \
     sed -i '65,90d' debian/rules  && \
     truncate  -s 0 debian/*.manpages && \
+    sed -i '1i/usr\/bin\/ovn-appctl' debian/ovn-common.install && \
+    sed -i '1i/utilities\/ovn-appctl.8' debian/ovn-common.manpages && \
     sed -i 's/--dbg-package=openvswitch-dbg//g' debian/rules && \
     CONFIGURE_OPTS='LIBS=-ljemalloc' && \
     if [ "$ARCH" = "amd64" ]; then CONFIGURE_OPTS='LIBS=-ljemalloc CFLAGS="-O2 -g -msse4.2 -mpopcnt"'; fi && \
