@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM etcdnecx/kube-ovn-base:ecx-base
+FROM etcdnecx/kube-ovn-base:ecx-base-backup
 
 COPY *.sh /kube-ovn/
 COPY kubectl-ko /kube-ovn/kubectl-ko
