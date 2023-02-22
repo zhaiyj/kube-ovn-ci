@@ -9,7 +9,7 @@ on:
       - completed
 env:
   REGISTRY: etcdnecx
-  RELEASE_TAG: ecx-v1.9.1
+  RELEASE_TAG: ecx-release-1.9.2
 
 jobs:
   build:
