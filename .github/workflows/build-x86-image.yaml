@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - release-*
+      - ecx-release-*
 env:
   KIND_VERSION: v0.15.0
   REGISTRY: etcdnecx
