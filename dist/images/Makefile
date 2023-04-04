@@ -2,7 +2,7 @@ GO_VERSION = 1.17
 
 REGISTRY = etcdnecx
 DEV_TAG = dev
-RELEASE_TAG = ecx-v1.9.1
+RELEASE_TAG = ecx-release-v1.9.1
 
 # ARCH could be amd64,arm64
 ARCH = amd64
