@@ -9,7 +9,7 @@ env:
   KIND_VERSION: v0.15.0
   REGISTRY: etcdnecx
   RELEASE_TAG: ecx-develop
-  GO_VERSION: "1.18"
+  GO_VERSION: "1.19"
   GOSEC_VERSION: "2.13.1"
 
 jobs:
