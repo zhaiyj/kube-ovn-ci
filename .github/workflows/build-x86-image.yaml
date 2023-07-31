@@ -8,7 +8,7 @@ on:
 env:
   KIND_VERSION: v0.15.0
   REGISTRY: etcdnecx
-  RELEASE_TAG: ecx-develop
+  RELEASE_TAG: ecx-develop-tmp
   GO_VERSION: "1.19"
   GOSEC_VERSION: "2.13.1"
 
