@@ -11,7 +11,7 @@ RUN apt update && apt install build-essential git libnuma-dev autoconf curl \
     flake8 python3-sphinx graphviz groff wget libjemalloc-dev -y
 
 RUN cd /usr/src/ && \
-    git clone -b ecx-2.14.4-advance --depth=1 https://github.com/zhaiyj/ovs.git && \
+    git clone -b ecx-2.14.4-advance --depth=1 https://github.com/EdgeCloudX/ovs.git && \
     cd ovs && \
     ./boot.sh && \
     rm -rf .git && \
@@ -41,26 +41,26 @@ RUN cd /usr/src/ && git clone -b ecx-develop --depth=1 https://github.com/EdgeCl
     OVSDIR=/usr/src/ovs DATAPATH_CONFIGURE_OPTS='--prefix=/usr --with-ovs-source=/usr/src/ovs' EXTRA_CONFIGURE_OPTS=$CONFIGURE_OPTS DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
 RUN mkdir /packages/ && \
-     cp /usr/src/ovn/ovn-ic-*.ovsschema /packages && \
-     cp /usr/src/ovn/utilities/ovn-lib /packages && \
-     cp /usr/src/libopenvswitch*.deb /packages && \
-     cp /usr/src/openvswitch-*.deb /packages && \
-     cp /usr/src/python3-openvswitch*.deb /packages && \
-     cp /usr/src/ovn-*.deb /packages && \
-     cd /packages && rm -f *dbg* *datapath* *docker* *vtep* *ipsec* *test* *dev*
+    cp /usr/src/ovn/ovn-ic-*.ovsschema /packages && \
+    cp /usr/src/ovn/utilities/ovn-lib /packages && \
+    cp /usr/src/libopenvswitch*.deb /packages && \
+    cp /usr/src/openvswitch-*.deb /packages && \
+    cp /usr/src/python3-openvswitch*.deb /packages && \
+    cp /usr/src/ovn-*.deb /packages && \
+    cd /packages && rm -f *dbg* *datapath* *docker* *vtep* *ipsec* *test* *dev*
 
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt upgrade -y && apt install ca-certificates python3 hostname libunwind8 netbase \
-        ethtool iproute2 ncat libunbound-dev procps libatomic1 kmod iptables \
-        tcpdump ipset curl uuid-runtime openssl inetutils-ping arping ndisc6 \
-        logrotate libjemalloc2 dnsutils -y --no-install-recommends && \
-        rm -rf /var/lib/apt/lists/* && \
-        cd /usr/sbin && \
-        ln -sf /usr/sbin/iptables-legacy iptables && \
-        ln -sf /usr/sbin/ip6tables-legacy ip6tables && \
-        rm -rf /etc/localtime
+    ethtool iproute2 ncat libunbound-dev procps libatomic1 kmod iptables \
+    tcpdump ipset curl uuid-runtime openssl inetutils-ping arping ndisc6 \
+    logrotate libjemalloc2 dnsutils -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/* && \
+    cd /usr/sbin && \
+    ln -sf /usr/sbin/iptables-legacy iptables && \
+    ln -sf /usr/sbin/ip6tables-legacy ip6tables && \
+    rm -rf /etc/localtime
 
 RUN mkdir -p /var/run/openvswitch && \
     mkdir -p /var/run/ovn && \
