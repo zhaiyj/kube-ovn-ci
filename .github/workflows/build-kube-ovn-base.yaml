@@ -43,8 +43,8 @@ jobs:
           docker load --input image-amd64.tar
       - name: Push
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: zhaiyj2
+          DOCKER_PASSWORD: ZYJLOVEhqp04!
           COMMIT: ${{ github.sha }}
         run: |
           cat VERSION
