@@ -83,9 +83,8 @@ jobs:
           DOCKER_USERNAME: zhaiyj2
           DOCKER_PASSWORD: ZYJLOVEhqp04!
           COMMIT: ${{ github.sha }}
-        run: |
-          cat VERSION
-          TAG=$(cat VERSION)
+        run: | 
+          TAG= "ecx-develop"
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker images
           docker tag $REGISTRY/kube-ovn:$TAG $REGISTRY/kube-ovn:$TAG-x86
