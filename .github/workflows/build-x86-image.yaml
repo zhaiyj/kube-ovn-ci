@@ -7,7 +7,7 @@ on:
       - ecx-develop
 env:
   KIND_VERSION: v0.15.0
-  REGISTRY: etcdnecx
+  REGISTRY: zhaiyj2
   RELEASE_TAG: ecx-develop
   GO_VERSION: "1.19"
   GOSEC_VERSION: "2.13.1"
@@ -82,8 +82,8 @@ jobs:
       - name: Push
         if: ${{ contains(github.ref, 'release') || contains(github.ref, 'ecx-develop') }}
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: zhaiyj2
+          DOCKER_PASSWORD: ZYJLOVEhqp04!
           COMMIT: ${{ github.sha }}
         run: |
           cat VERSION
