@@ -1,6 +1,6 @@
 GO_VERSION = 1.17
 
-REGISTRY = etcdnecx
+REGISTRY = zhaiyj2
 DEV_TAG = dev
 RELEASE_TAG = ecx-develop
 
