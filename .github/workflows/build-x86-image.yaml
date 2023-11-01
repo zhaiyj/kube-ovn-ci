@@ -2,8 +2,6 @@ name: Build x86 Image
 on:
   push:
     branches:
-      - master
-      - release-*
       - ecx-develop
 env:
   KIND_VERSION: v0.15.0
