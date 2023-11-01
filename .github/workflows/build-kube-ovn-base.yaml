@@ -1,5 +1,13 @@
 name: Build Base
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - ecx-base
+    tags:
+      - ecx-base
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
 jobs:
   build-amd64:
     name: Build AMD64
