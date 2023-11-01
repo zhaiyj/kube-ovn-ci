@@ -1,4 +1,4 @@
-REGISTRY = etcdnecx
+REGISTRY = zhaiyj2
 RELEASE_TAG = $(shell cat VERSION)
 
 # ARCH could be amd64,arm64
