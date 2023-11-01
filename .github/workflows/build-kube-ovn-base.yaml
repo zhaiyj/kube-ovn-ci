@@ -1,8 +1,5 @@
 name: Build Base
-on: 
-  pull_request:
-        branches:
-          - ecx-base
+on: workflow_dispatch
 jobs:
   build-amd64:
     name: Build AMD64
