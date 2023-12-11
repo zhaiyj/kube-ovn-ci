@@ -44,7 +44,7 @@ jobs:
       - name: Push
         env:
           DOCKER_USERNAME: zhaiyj2
-          DOCKER_PASSWORD: ZYJLOVEhqp04!
+          DOCKER_PASSWORD: ZYJLOVEhqp04!,
           COMMIT: ${{ github.sha }}
         run: |
           cat VERSION
